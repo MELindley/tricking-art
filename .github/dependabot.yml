@@ -4,7 +4,23 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      # react / react-dom / their types must move together or `npm ci` can't resolve peers.
+      react:
+        patterns: [react, react-dom, '@types/react', '@types/react-dom']
+      # scripts/vendor.mjs copies these into public/vendor; keep them in lockstep.
+      ffmpeg:
+        patterns: ['@ffmpeg/*']
+    ignore:
+      # 0.12.2 ships a non-bundled CommonJS `dist/umd/index.js` (require("./errors.js")),
+      # which can't be loaded as a <script> tag. Revisit once upstream fixes the UMD build.
+      - dependency-name: '@ffmpeg/util'
+        versions: ['0.12.2']
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    groups:
+      # upload-pages-artifact and deploy-pages are versioned as a pair.
+      pages:
+        patterns: [actions/upload-pages-artifact, actions/deploy-pages]

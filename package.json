@@ -22,7 +22,7 @@
   "dependencies": {
     "@ffmpeg/core": "0.12.6",
     "@ffmpeg/ffmpeg": "0.12.10",
-    "@ffmpeg/util": "0.12.1",
+    "@ffmpeg/util": "0.12.2",
     "@fontsource/space-mono": "5.3.0",
     "@fontsource/unbounded": "5.3.0",
     "@mediapipe/pose": "0.5.1675469404",

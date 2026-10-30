@@ -1,0 +1,108 @@
+.anim-modal {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 16, 0.92);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 32px;
+}
+.anim-modal.visible {
+  display: flex;
+}
+.anim-modal__title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.85rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+.anim-modal__canvas {
+  width: min(280px, 80vw);
+  height: min(280px, 80vw);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #000;
+  object-fit: contain;
+}
+.anim-modal__progress {
+  width: min(260px, 70vw);
+}
+.anim-modal__track {
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.anim-modal__bar {
+  height: 100%;
+  background: var(--accent2);
+  transition: width 0.1s;
+}
+.anim-modal__label {
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+.anim-modal__sub {
+  font-size: 0.58rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-align: center;
+  line-height: 1.7;
+  max-width: min(260px, 70vw);
+}
+.anim-modal__buttons {
+  display: flex;
+  gap: 10px;
+  width: min(260px, 70vw);
+  min-height: 42px;
+}
+.anim-modal__dl {
+  flex: 1;
+  padding: 12px;
+  background: var(--accent2);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+.anim-modal__dl:active {
+  transform: scale(0.97);
+}
+.anim-modal__dl:disabled {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+.anim-modal__cancel {
+  padding: 10px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  cursor: pointer;
+  width: min(260px, 70vw);
+  text-align: center;
+}
+.anim-modal__cancel:active {
+  color: var(--accent);
+}

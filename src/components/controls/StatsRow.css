@@ -1,0 +1,27 @@
+.stats-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.stat-chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+.stat-chip span {
+  color: var(--accent);
+  display: block;
+  font-weight: 700;
+  font-size: 0.65rem;
+}
+.stat-chip--pose {
+  border-color: var(--accent2);
+}
+.stat-chip--pose span {
+  color: var(--accent2);
+}

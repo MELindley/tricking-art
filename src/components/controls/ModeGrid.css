@@ -1,0 +1,37 @@
+.mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.mode-card {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+.mode-card:active {
+  background: rgba(232, 255, 60, 0.06);
+}
+.mode-card.active {
+  border-color: var(--accent);
+  background: rgba(232, 255, 60, 0.06);
+}
+.mode-card__icon {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 6px;
+}
+.mode-card__name {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.mode-card.active .mode-card__name {
+  color: var(--accent);
+}

@@ -1,0 +1,25 @@
+.pal-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+  margin-bottom: 20px;
+}
+.pal-row::-webkit-scrollbar {
+  display: none;
+}
+.pal-chip {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+}
+.pal-chip.active {
+  border-color: #fff;
+  transform: scale(1.08);
+}

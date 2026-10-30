@@ -1,0 +1,48 @@
+.stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  padding-bottom: var(--sh);
+  transition: padding-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stage__canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.stage__preview {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+.stage__preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.stage__badge {
+  position: absolute;
+  top: calc(var(--safe-t) + 52px);
+  right: 16px;
+  background: rgba(255, 60, 142, 0.15);
+  border: 1px solid var(--accent2);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  color: var(--accent2);
+  z-index: 11;
+}
+@media (min-width: 768px) {
+  .stage {
+    padding-bottom: 0;
+  }
+  .stage__badge {
+    top: 16px;
+  }
+}

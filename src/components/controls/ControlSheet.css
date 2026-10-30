@@ -1,0 +1,102 @@
+.sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  z-index: 30;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--safe-b);
+}
+.sheet.collapsed {
+  transform: translateY(calc(100% - var(--sh)));
+}
+.sheet__handle {
+  flex-shrink: 0;
+  height: var(--sh);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: inherit;
+}
+.sheet__bar {
+  width: 36px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+}
+.sheet__hint {
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.sheet__content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 0 20px 20px;
+}
+.sheet__logo {
+  display: none;
+}
+.sheet__tagline {
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+.sheet__change {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.65rem;
+  cursor: pointer;
+  margin-bottom: 16px;
+  position: relative;
+  display: block;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .sheet {
+    position: relative;
+    width: 320px;
+    flex-shrink: 0;
+    border-radius: 0;
+    border-top: none;
+    border-right: 1px solid var(--border);
+    transform: none !important;
+    height: auto !important;
+    max-height: 100vh;
+    overflow: hidden;
+    order: -1;
+  }
+  .sheet__handle {
+    display: none;
+  }
+  .sheet__content {
+    padding: 20px;
+  }
+  .sheet__logo {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+}

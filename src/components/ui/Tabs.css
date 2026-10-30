@@ -1,0 +1,25 @@
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.tab {
+  flex: 1;
+  padding: 10px 4px;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  font-family: 'Space Mono', monospace;
+  transition: color 0.15s, border-color 0.15s;
+  text-align: center;
+}
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}

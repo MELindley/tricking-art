@@ -1,8 +1,10 @@
+import { assetUrl } from '../../lib/assetUrl';
 import { loadScript } from '../../lib/loadScript';
 
-const FFMPEG_JS = 'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js';
-const FFMPEG_UTIL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/index.js';
-const CORE_BASE = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd';
+// Served from our own origin (see scripts/vendor.mjs) — no third-party CDN.
+const FFMPEG_JS = () => assetUrl('vendor/ffmpeg/ffmpeg.js');
+const FFMPEG_UTIL = () => assetUrl('vendor/ffmpeg/util.js');
+const CORE_BASE = () => assetUrl('vendor/ffmpeg');
 
 export interface FFmpegInstance {
   load(opts: { coreURL: string; wasmURL: string }): Promise<void>;
@@ -15,7 +17,6 @@ export interface FFmpegInstance {
 }
 
 interface FFmpegUtil {
-  toBlobURL(url: string, mime: string): Promise<string>;
   fetchFile(file: Blob | File | string): Promise<Uint8Array>;
 }
 
@@ -27,7 +28,7 @@ declare global {
 }
 
 async function loadLibs() {
-  await Promise.all([loadScript(FFMPEG_JS), loadScript(FFMPEG_UTIL)]);
+  await Promise.all([loadScript(FFMPEG_JS()), loadScript(FFMPEG_UTIL())]);
   const FFmpeg = window.FFmpegWASM?.FFmpeg;
   const util = window.FFmpegUtil;
   if (!FFmpeg || !util) throw new Error('FFmpeg library not loaded on page');
@@ -47,8 +48,8 @@ export async function createFFmpeg(): Promise<FFmpegSession> {
   const { FFmpeg, util } = await loadLibs();
   const ff = new FFmpeg();
   await ff.load({
-    coreURL: await util.toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, 'text/javascript'),
-    wasmURL: await util.toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, 'application/wasm'),
+    coreURL: `${CORE_BASE()}/ffmpeg-core.js`,
+    wasmURL: `${CORE_BASE()}/ffmpeg-core.wasm`,
   });
   return { ff, fetchFile: util.fetchFile };
 }

@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#080810" />
-    <title>TRICK/ART</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700;900&display=swap"
-      rel="stylesheet"
+    <!-- GitHub Pages can't set response headers, so the CSP ships as a <meta>. Everything is same-origin:
+         MediaPipe/FFmpeg/fonts are bundled (see scripts/vendor.mjs). 'wasm-unsafe-eval' is required by both wasm runtimes. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
+    <meta name="referrer" content="no-referrer" />
+    <title>TRICK/ART</title>
   </head>
   <body>
     <div id="root"></div>

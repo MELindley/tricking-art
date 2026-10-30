@@ -1,7 +1,9 @@
+import { assetUrl } from '../../lib/assetUrl';
 import { loadScript } from '../../lib/loadScript';
 import type { Landmark } from '../../types';
 
-const BASE = 'https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404';
+// Served from our own origin (see scripts/vendor.mjs) — no third-party CDN.
+const base = () => assetUrl('vendor/mediapipe-pose');
 const INIT_TIMEOUT_MS = 30_000;
 const DETECT_TIMEOUT_MS = 2_000;
 
@@ -27,10 +29,10 @@ let loading: Promise<PoseModel | null> | null = null;
 export const isPoseReady = () => model !== null;
 
 async function init(): Promise<PoseModel> {
-  await loadScript(`${BASE}/pose.js`, 'anonymous');
+  await loadScript(`${base()}/pose.js`, 'anonymous');
   if (!window.Pose) throw new Error('MediaPipe Pose global not found');
 
-  const pose = new window.Pose({ locateFile: (f) => `${BASE}/${f}` });
+  const pose = new window.Pose({ locateFile: (f) => `${base()}/${f}` });
   pose.setOptions({
     modelComplexity: 1, // 0=lite, 1=full, 2=heavy — 1 is the best balance on mobile
     smoothLandmarks: true,

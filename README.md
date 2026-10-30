@@ -29,13 +29,14 @@ npm run dev        # http://localhost:5173
 
 ```bash
 npm run typecheck
-npm test
+npm test           # unit tests
+npm run test:e2e   # Playwright smoke test (needs ffmpeg on PATH + `npx playwright install chromium`)
 npm run build      # outputs dist/
 ```
 
 To host under a sub-path (e.g. GitHub Pages) build with `BASE_PATH=/tricking-art/ npm run build`.
 
-MediaPipe and FFmpeg.wasm are loaded lazily from jsDelivr on first use (~20 MB for the pose model), so the first generation needs a network connection.
+MediaPipe and FFmpeg.wasm are installed from npm (exact versions) and served from the app's own origin — there are no third-party requests at runtime. `scripts/vendor.mjs` copies them into `public/vendor/` (git-ignored) before `dev`/`build`. They're loaded lazily on first use (~20 MB for the pose model). A Content-Security-Policy `<meta>` in `index.html` enforces same-origin only.
 
 ## Project structure
 

@@ -64,6 +64,9 @@ export interface ExtractionResult {
 
 export type ArtMode = 'trail' | 'mandala' | 'ghost' | 'flow';
 
+/** A region of the body the art can be restricted to. Left/right are the athlete's own. */
+export type BodyPart = 'head' | 'torso' | 'leftArm' | 'rightArm' | 'leftFoot' | 'rightFoot';
+
 export interface Palette {
   name: string;
   colors: string[];
@@ -80,6 +83,8 @@ export interface TuneSettings {
 export interface ArtSettings extends TuneSettings {
   mode: ArtMode;
   palette: string[];
+  /** Which body parts drive the art (all of them = the whole body). Needs pose tracking. */
+  bodyParts: readonly BodyPart[];
 }
 
 export interface RenderParams {
@@ -87,6 +92,10 @@ export interface RenderParams {
   glow: number;
   symmetry: number;
   palette: string[];
+  /** Landmark pairs drawn as limbs. */
+  bones: ReadonlyArray<readonly [number, number]>;
+  /** Landmarks that count as tracked. */
+  joints: ReadonlySet<number>;
   /** Source video size. */
   W: number;
   H: number;

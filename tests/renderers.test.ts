@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { ALL_BODY_PARTS } from '../src/constants/bodyParts';
 import { PALETTES } from '../src/constants/palettes';
 import { rgba } from '../src/lib/color';
 import { sleep } from '../src/lib/async';
@@ -36,6 +37,7 @@ const settings = (mode: ArtMode): ArtSettings => ({
   glow: 0.6,
   symmetry: 3,
   persistence: 0.85,
+  bodyParts: ALL_BODY_PARTS,
 });
 
 const landmarks = (): Landmark[] =>

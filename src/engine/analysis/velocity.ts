@@ -1,4 +1,5 @@
-import { POSE_JOINTS, VELOCITY_WINDOW } from '../../constants/pose';
+import { TRACKED_JOINTS } from '../../constants/bodyParts';
+import { VELOCITY_WINDOW } from '../../constants/pose';
 import type { Landmark } from '../../types';
 
 interface Sample {
@@ -16,7 +17,7 @@ export class VelocityTracker {
 
   update(landmarks: Landmark[]): Record<number, number> {
     const velocities: Record<number, number> = {};
-    for (const idx of POSE_JOINTS) {
+    for (const idx of TRACKED_JOINTS) {
       const lm = landmarks[idx];
       let hist = this.history.get(idx);
       if (!hist) this.history.set(idx, (hist = []));

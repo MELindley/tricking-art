@@ -20,6 +20,14 @@ Videos the browser can't decode are transcoded to H.264 with FFmpeg.wasm first.
 | Ghost Stack | ~20 evenly spaced "echoes" of the body |
 | Flow Field | Motion accumulated into a grid, traced as streamlines (PNG only) |
 
+## Tracking body parts
+
+With pose tracking on, the **Track** section of the Style tab restricts the art to the parts you pick: **head, torso, left/right arm, left/right foot** (or the whole body, the default). Left and right are the athlete's own sides. The art then follows only those joints, and its energy is driven by just their movement, so a still foot stays quiet while the other kicks.
+
+Pose analysis is kept for the loaded clip, so changing parts, mode or palette and pressing Generate again re-renders without re-tracking. Parts need a detected pose: with pose tracking off, or when nobody is found in the clip, the whole body is used and the status line says so.
+
+To add a part, add an entry to `BODY_PARTS` in `constants/bodyParts.ts` and its id to the `BodyPart` type.
+
 ## Getting started
 
 ```bash
@@ -44,7 +52,7 @@ MediaPipe and FFmpeg.wasm are installed from npm (exact versions) and served fro
 src/
 ├── main.tsx, App.tsx          # entry + top-level state wiring
 ├── types/                     # shared types (FrameData, RenderParams, …)
-├── constants/                 # palettes, modes/tune controls, pose joints & skeleton, canvas sizes
+├── constants/                 # palettes, modes/tune controls, pose joints & skeleton, body parts, canvas sizes
 ├── lib/                       # tiny helpers: color, loadScript, download, async
 ├── engine/                    # framework-free logic (no React)
 │   ├── pose/                  #   MediaPipe loader + detection

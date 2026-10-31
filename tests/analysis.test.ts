@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { diffFrames, pixelDiff } from '../src/engine/analysis/frameDiff';
 import { MotionAnalyzer } from '../src/engine/analysis/MotionAnalyzer';
+import { TRACKED_JOINTS } from '../src/constants/bodyParts';
 import { POSE_JOINTS } from '../src/constants/pose';
 import type { Landmark } from '../src/types';
 
@@ -76,7 +77,7 @@ describe('MotionAnalyzer', () => {
     const f = an.fromLandmarks(lms, solid(32, 32, [0, 0, 0]));
     expect(f.isPose).toBe(true);
     expect(f.keypoints.some((k) => k.jointIdx === POSE_JOINTS[0])).toBe(false);
-    expect(f.keypoints.length).toBe(POSE_JOINTS.length - 1);
+    expect(f.keypoints.length).toBe(TRACKED_JOINTS.length - 1);
     expect(f.energy).toBeGreaterThanOrEqual(0);
     expect(f.energy).toBeLessThanOrEqual(1);
     expect(f.keypoints.every((k) => k.energy >= 0 && k.energy <= 1)).toBe(true);

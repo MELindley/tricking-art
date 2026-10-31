@@ -1,4 +1,3 @@
-import { SKELETON } from '../../constants/pose';
 import { hexToRgb, rgba } from '../../lib/color';
 import type { FrameData, RenderParams } from '../../types';
 import { bodyCentre, isVisible, symmetryAngle, symPoint } from './geometry';
@@ -37,7 +36,7 @@ export function drawGhostFrame(
     const angle = symmetryAngle(sym, p.symmetry);
 
     if (fr.isPose && fr.landmarks) {
-      for (const [ia, ib] of SKELETON) {
+      for (const [ia, ib] of p.bones) {
         const a = fr.landmarks[ia];
         const b = fr.landmarks[ib];
         if (!isVisible(a, b)) continue;
@@ -52,7 +51,7 @@ export function drawGhostFrame(
         ctx.stroke();
       }
       const nose = fr.landmarks[0];
-      if (nose.visibility > 0.3) {
+      if (p.joints.has(0) && nose.visibility > 0.3) {
         const [nx, ny] = symPoint(nose.x, nose.y, angle, p, body);
         ctx.beginPath();
         ctx.arc(nx, ny, p.lineWeight * 3, 0, Math.PI * 2);

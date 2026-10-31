@@ -4,13 +4,14 @@ import { ControlTabs } from './components/controls/ControlTabs';
 import { Header } from './components/layout/Header';
 import { CanvasStage } from './components/stage/CanvasStage';
 import { MOBILE_BREAKPOINT } from './constants/canvas';
+import { ALL_BODY_PARTS } from './constants/bodyParts';
 import { DEFAULT_TUNE } from './constants/modes';
 import { PALETTES } from './constants/palettes';
 import { useAnimatedExport } from './hooks/useAnimatedExport';
 import { useGenerator } from './hooks/useGenerator';
 import { useMediaQuery } from './hooks/useMediaQuery';
 import { useObjectUrl } from './hooks/useObjectUrl';
-import type { ArtMode, ArtSettings, TuneSettings } from './types';
+import type { ArtMode, ArtSettings, BodyPart, TuneSettings } from './types';
 import './App.css';
 
 export function App() {
@@ -25,6 +26,7 @@ export function App() {
   const [paletteIdx, setPaletteIdx] = useState(0);
   const [tune, setTune] = useState<TuneSettings>(DEFAULT_TUNE);
   const [poseEnabled, setPoseEnabled] = useState(true);
+  const [bodyParts, setBodyParts] = useState<BodyPart[]>([...ALL_BODY_PARTS]);
 
   const [sheetOpen, setSheetOpen] = useState(false);
   const [sheetHeight, setSheetHeight] = useState(0);
@@ -62,8 +64,9 @@ export function App() {
   }, [isDesktop]);
 
   const settings = useMemo<ArtSettings>(
-    () => ({ ...tune, mode, palette: PALETTES[paletteIdx].colors }),
-    [tune, mode, paletteIdx],
+    // Body parts only mean something with pose tracking; without it the whole clip's motion is used.
+    () => ({ ...tune, mode, palette: PALETTES[paletteIdx].colors, bodyParts: poseEnabled ? bodyParts : ALL_BODY_PARTS }),
+    [tune, mode, paletteIdx, bodyParts, poseEnabled],
   );
   const generate = useCallback(() => {
     if (file) void generator.generate(file, settings);
@@ -96,6 +99,8 @@ export function App() {
           onModeChange={setMode}
           paletteIdx={paletteIdx}
           onPaletteChange={setPaletteIdx}
+          bodyParts={bodyParts}
+          onBodyPartsChange={setBodyParts}
           tune={tune}
           onTuneChange={setTune}
           poseEnabled={poseEnabled}

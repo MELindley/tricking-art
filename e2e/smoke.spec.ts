@@ -75,3 +75,34 @@ test('undecodable clip is transcoded with self-hosted FFmpeg.wasm', async ({ pag
   await expect(page.getByText('DONE')).toBeVisible();
   expect(problems).toEqual([]);
 });
+
+test('body-part picker: choose parts, re-render from the cached analysis, and disable without pose', async ({ page }) => {
+  const problems = guard(page);
+  await generate(page, makeClip('parts.webm', ['-c:v', 'libvpx', '-b:v', '1M']));
+
+  // The sheet closes while generating on mobile; reopen it.
+  await page.getByText('STYLE & GENERATE').click();
+  const whole = page.getByRole('button', { name: 'Whole body' });
+  const leftFoot = page.getByRole('button', { name: 'L Foot' });
+  const rightArm = page.getByRole('button', { name: 'R Arm' });
+
+  await expect(whole).toHaveAttribute('aria-pressed', 'true');
+  await leftFoot.click();
+  await expect(leftFoot).toHaveAttribute('aria-pressed', 'true');
+  await expect(whole).toHaveAttribute('aria-pressed', 'false');
+  await rightArm.click();
+  await expect(rightArm).toHaveAttribute('aria-pressed', 'true');
+  await rightArm.click();
+  await leftFoot.click(); // the last selected part can't be switched off
+  await expect(leftFoot).toHaveAttribute('aria-pressed', 'true');
+
+  // Re-rendering reuses the pose analysis, so this lands well inside the default 5s timeout.
+  // The test clip has nobody in it, so the app must say it fell back to the whole body.
+  await page.getByRole('button', { name: 'GENERATE ART' }).first().click();
+  await expect(page.getByText(/NO BODY FOUND/)).toBeVisible();
+
+  await page.getByText('STYLE & GENERATE').click();
+  await page.getByRole('switch', { name: 'Pose Tracking' }).click();
+  await expect(leftFoot).toBeDisabled();
+  expect(problems).toEqual([]);
+});

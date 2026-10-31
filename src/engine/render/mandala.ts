@@ -1,4 +1,3 @@
-import { SKELETON } from '../../constants/pose';
 import { hexToRgb, rgba } from '../../lib/color';
 import type { FrameData, RenderParams } from '../../types';
 import { isVisible, symmetryAngle } from './geometry';
@@ -32,7 +31,7 @@ export function drawMandalaFrame(
     const axisAngle = symmetryAngle(axis, axes);
 
     if (fr.isPose && fr.landmarks) {
-      for (const [ia, ib] of SKELETON) {
+      for (const [ia, ib] of p.bones) {
         const a = fr.landmarks[ia];
         const b = fr.landmarks[ib];
         if (!isVisible(a, b)) continue;

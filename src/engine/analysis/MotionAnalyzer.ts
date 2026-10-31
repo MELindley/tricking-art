@@ -1,3 +1,4 @@
+import { TRACKED_JOINTS } from '../../constants/bodyParts';
 import { POSE_JOINTS } from '../../constants/pose';
 import type { AnalyzedFrame, Keypoint, Landmark } from '../../types';
 import { computeCentroid, deriveKeypoints, diffFrames, pixelDiff } from './frameDiff';
@@ -24,7 +25,7 @@ export class MotionAnalyzer {
     const { width: W, height: H } = img;
     const velocities = this.velocity.update(landmarks);
 
-    const keypoints: Keypoint[] = POSE_JOINTS.map((idx) => {
+    const keypoints: Keypoint[] = TRACKED_JOINTS.map((idx) => {
       const lm = landmarks[idx];
       const velocity = velocities[idx] ?? 0;
       return {
@@ -39,7 +40,8 @@ export class MotionAnalyzer {
       };
     }).filter((kp) => (kp.visibility ?? 0) > 0.4);
 
-    const totalVel = Object.values(velocities).reduce((s, v) => s + v, 0);
+    // Body energy stays defined by the original joint set, whatever extra joints are tracked.
+    const totalVel = POSE_JOINTS.reduce<number>((s, idx) => s + (velocities[idx] ?? 0), 0);
     const bodyEnergy = Math.min(totalVel * 15, 1);
 
     const phase = this.phase.update(landmarks, bodyEnergy, velocities);

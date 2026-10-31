@@ -1,4 +1,4 @@
-import { EXTREMITY_JOINTS, PHASE, PHASE_PALETTE_IDX, SKELETON } from '../../constants/pose';
+import { EXTREMITY_JOINTS, PHASE, PHASE_PALETTE_IDX } from '../../constants/pose';
 import { hexToRgb, rgba } from '../../lib/color';
 import type { FrameData, RenderParams } from '../../types';
 import { bodyCentre, isVisible, symmetryAngle, symPoint } from './geometry';
@@ -36,7 +36,7 @@ export function drawTrailFrame(
     for (let sym = 0; sym < p.symmetry; sym++) {
       const angle = symmetryAngle(sym, p.symmetry);
 
-      for (const [ia, ib] of SKELETON) {
+      for (const [ia, ib] of p.bones) {
         const a = lms[ia];
         const b = lms[ib];
         if (!isVisible(a, b)) continue;

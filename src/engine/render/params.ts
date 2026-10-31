@@ -1,5 +1,6 @@
 import { IG_H, IG_W } from '../../constants/canvas';
 import type { ArtSettings, RenderParams } from '../../types';
+import { resolveSelection } from './bodyParts';
 
 /**
  * Layout: the clip is fitted into a square "art zone" centred in a 9:16
@@ -9,11 +10,14 @@ export function buildRenderParams(settings: ArtSettings, W: number, H: number): 
   const SIZE = IG_W;
   const artOffY = (IG_H - SIZE) / 2;
   const scale = SIZE / Math.max(W, H);
+  const { bones, joints } = resolveSelection(settings.bodyParts);
   return {
     lineWeight: settings.lineWeight,
     glow: settings.glow,
     symmetry: settings.symmetry,
     palette: settings.palette,
+    bones,
+    joints,
     W,
     H,
     SIZE,

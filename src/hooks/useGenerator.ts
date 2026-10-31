@@ -3,6 +3,8 @@ import { extractFrames, isUnsupportedFormatError } from '../engine/extraction/ex
 import { transcodeToMp4 } from '../engine/export/transcode';
 import { isPoseReady } from '../engine/pose/mediapipe';
 import { buildRenderParams, renderStill } from '../engine/render';
+import { applyBodyParts } from '../engine/render/bodyParts';
+import { ALL_BODY_PARTS } from '../constants/bodyParts';
 import { computeStats } from '../engine/render/stats';
 import type {
   ArtMode,
@@ -45,6 +47,8 @@ export function useGenerator({ canvasRef, poseEnabled, onPoseUnavailable, onSour
   const [busy, setBusy] = useState(false);
   const [poseReady, setPoseReady] = useState(false);
   const transcoded = useRef<Blob | null>(null);
+  /** Pose analysis of the current clip, kept so mode / palette / body-part changes re-render without re-tracking. */
+  const extracted = useRef<{ file: File; poseEnabled: boolean; result: ExtractionResult } | null>(null);
 
   const setStatus = useCallback((msg: string, kind: StatusKind = 'idle') => setStatusState({ msg, kind }), []);
   const patchProgress = useCallback(
@@ -62,6 +66,7 @@ export function useGenerator({ canvasRef, poseEnabled, onPoseUnavailable, onSour
   /** Forget cached transcode + results when a new video is picked. */
   const reset = useCallback(() => {
     transcoded.current = null;
+    extracted.current = null;
     setArt(null);
     setStats(null);
   }, []);
@@ -78,31 +83,43 @@ export function useGenerator({ canvasRef, poseEnabled, onPoseUnavailable, onSour
       try {
         const opts = { poseEnabled, onProgress: patchProgress };
         let result: ExtractionResult;
-        try {
-          result = await extractFrames(transcoded.current ?? file, opts);
-        } catch (e) {
-          if (!isUnsupportedFormatError(e)) throw e;
-          setStatus('TRANSCODING...', 'active');
-          patchProgress({ label: 'TRANSCODING' });
-          const blob = await transcodeToMp4(file, (pct, detail) => patchProgress({ pct, detail }));
-          transcoded.current = blob;
-          onSourceReplaced(blob);
-          result = await extractFrames(blob, opts);
+        const cached = extracted.current;
+        if (cached && cached.file === file && cached.poseEnabled === poseEnabled) {
+          result = cached.result;
+        } else {
+          try {
+            result = await extractFrames(transcoded.current ?? file, opts);
+          } catch (e) {
+            if (!isUnsupportedFormatError(e)) throw e;
+            setStatus('TRANSCODING...', 'active');
+            patchProgress({ label: 'TRANSCODING' });
+            const blob = await transcodeToMp4(file, (pct, detail) => patchProgress({ pct, detail }));
+            transcoded.current = blob;
+            onSourceReplaced(blob);
+            result = await extractFrames(blob, opts);
+          }
+          extracted.current = { file, poseEnabled, result };
         }
 
         if (poseEnabled && !result.poseAvailable) onPoseUnavailable();
         setPoseReady(isPoseReady());
 
         setStatus('RENDERING...', 'active');
-        const params = buildRenderParams(settings, result.W, result.H);
+        // Body parts need a detected pose; without one, fall back to the whole body.
+        const noPose = result.poseHits === 0;
+        const bodyParts = noPose ? ALL_BODY_PARTS : settings.bodyParts;
+        const partial = !noPose && bodyParts.length > 0 && bodyParts.length < ALL_BODY_PARTS.length;
+        const { frames, peakEnergy } = applyBodyParts(result.frames, bodyParts);
+        const params = buildRenderParams({ ...settings, bodyParts }, result.W, result.H);
         canvas.width = params.CANVAS_W;
         canvas.height = params.CANVAS_H;
-        const maxE = renderStill(canvas.getContext('2d')!, result.frames, params, settings.mode);
+        const maxE = renderStill(canvas.getContext('2d')!, frames, params, settings.mode);
 
-        setArt({ frames: result.frames, params, mode: settings.mode });
-        setStats(computeStats(result.frames, settings.mode, maxE, result.poseHits));
+        setArt({ frames, params, mode: settings.mode });
+        setStats(computeStats(frames, settings.mode, peakEnergy ?? maxE, result.poseHits));
         setProgress(IDLE_PROGRESS);
-        setStatus('DONE ✶');
+        const ignored = noPose && settings.bodyParts.length < ALL_BODY_PARTS.length;
+        setStatus(ignored ? 'DONE ✶ NO BODY FOUND — USED FULL MOTION' : partial ? 'DONE ✶ BODY PARTS' : 'DONE ✶');
       } catch (e) {
         console.error(e);
         const msg = e instanceof Error ? e.message : String(e);

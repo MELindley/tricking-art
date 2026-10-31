@@ -29,7 +29,7 @@ export interface GeneratedArt {
 }
 
 interface Options {
-  canvasRef: RefObject<HTMLCanvasElement>;
+  canvasRef: RefObject<HTMLCanvasElement | null>;
   poseEnabled: boolean;
   onPoseUnavailable: () => void;
   onSourceReplaced: (blob: Blob) => void;

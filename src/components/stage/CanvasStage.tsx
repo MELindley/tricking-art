@@ -9,7 +9,7 @@ import { UploadHero } from './UploadHero';
 import './CanvasStage.css';
 
 interface Props {
-  canvasRef: RefObject<HTMLCanvasElement>;
+  canvasRef: RefObject<HTMLCanvasElement | null>;
   previewUrl: string | null;
   hasArt: boolean;
   showPoseBadge: boolean;

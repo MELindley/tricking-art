@@ -4,7 +4,7 @@ import './AnimExportModal.css';
 
 interface Props {
   state: AnimExportState;
-  canvasRef: RefObject<HTMLCanvasElement>;
+  canvasRef: RefObject<HTMLCanvasElement | null>;
   onClose: () => void;
   onDownloadRecording: () => void;
   onDownloadMp4: () => void;

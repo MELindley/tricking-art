@@ -4,6 +4,7 @@ import { POSE_JOINTS, SKELETON } from '../src/constants/pose';
 import { MotionAnalyzer } from '../src/engine/analysis/MotionAnalyzer';
 import { VelocityTracker } from '../src/engine/analysis/velocity';
 import { PALETTES } from '../src/constants/palettes';
+import { ALL_PHASES } from '../src/constants/phases';
 import { buildRenderParams, renderStill } from '../src/engine/render';
 import { applyBodyParts, resolveSelection } from '../src/engine/render/bodyParts';
 import type { ArtMode, BodyPart, FrameData, Landmark } from '../src/types';
@@ -189,7 +190,7 @@ describe('rendering a subset', () => {
       },
       set: (t, prop, v) => ((t[prop as string] = v), true),
     }) as unknown as CanvasRenderingContext2D;
-    const settings = { mode, palette: PALETTES[0].colors, lineWeight: 2, glow: 0.6, symmetry: 1, persistence: 0.85, bodyParts: parts };
+    const settings = { mode, palette: PALETTES[0].colors, lineWeight: 2, glow: 0.6, symmetry: 1, persistence: 0.85, bodyParts: parts, phases: ALL_PHASES };
     const params = buildRenderParams(settings, 1080, 1920);
     const { frames } = applyBodyParts(clip([27, 15]), parts);
     renderStill(ctx, frames, params, mode);

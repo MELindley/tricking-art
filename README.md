@@ -26,6 +26,10 @@ With pose tracking on, the **Track** section of the Style tab restricts the art 
 
 Pose analysis is kept for the loaded clip, so changing parts, mode or palette and pressing Generate again re-renders without re-tracking. Parts need a detected pose: with pose tracking off, or when nobody is found in the clip, the whole body is used and the status line says so.
 
+## Choosing trick phases
+
+Under **Trick Phase** pick which stages of the trick are drawn: **load, launch, peak, land**, in any combination (e.g. just Launch + Peak, or Peak + Land). **Whole trick** is the default and includes the idle frames too. Frames are filtered by the detected phase after body parts are applied, so it combines with the Track picker. Like body parts, it needs a detected pose; if none of the picked phases occur in the clip, the whole clip is drawn and the status line says so.
+
 To add a part, add an entry to `BODY_PARTS` in `constants/bodyParts.ts` and its id to the `BodyPart` type.
 
 ## Getting started

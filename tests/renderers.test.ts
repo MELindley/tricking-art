@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_BODY_PARTS } from '../src/constants/bodyParts';
+import { ALL_PHASES } from '../src/constants/phases';
 import { PALETTES } from '../src/constants/palettes';
 import { rgba } from '../src/lib/color';
 import { sleep } from '../src/lib/async';
@@ -38,6 +39,7 @@ const settings = (mode: ArtMode): ArtSettings => ({
   symmetry: 3,
   persistence: 0.85,
   bodyParts: ALL_BODY_PARTS,
+  phases: ALL_PHASES,
 });
 
 const landmarks = (): Landmark[] =>

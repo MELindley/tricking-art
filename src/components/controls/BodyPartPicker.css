@@ -7,6 +7,9 @@
 .part-picker .part-chip:first-child {
   grid-column: 1 / -1;
 }
+.part-picker--phases {
+  grid-template-columns: repeat(4, 1fr);
+}
 .part-chip {
   background: var(--surface2);
   border: 1.5px solid var(--border);

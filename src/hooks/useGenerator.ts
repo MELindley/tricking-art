@@ -4,6 +4,8 @@ import { transcodeToMp4 } from '../engine/export/transcode';
 import { isPoseReady } from '../engine/pose/mediapipe';
 import { buildRenderParams, renderStill } from '../engine/render';
 import { applyBodyParts } from '../engine/render/bodyParts';
+import { applyPhases, isAllPhases } from '../engine/render/phases';
+import { ALL_PHASES } from '../constants/phases';
 import { ALL_BODY_PARTS } from '../constants/bodyParts';
 import { computeStats } from '../engine/render/stats';
 import type {
@@ -109,7 +111,13 @@ export function useGenerator({ canvasRef, poseEnabled, onPoseUnavailable, onSour
         const noPose = result.poseHits === 0;
         const bodyParts = noPose ? ALL_BODY_PARTS : settings.bodyParts;
         const partial = !noPose && bodyParts.length > 0 && bodyParts.length < ALL_BODY_PARTS.length;
-        const { frames, peakEnergy } = applyBodyParts(result.frames, bodyParts);
+        const { frames: partFrames, peakEnergy } = applyBodyParts(result.frames, bodyParts);
+        // Phases need a detected pose too. If the picked ones never occur, draw the whole clip instead.
+        const picked = noPose ? ALL_PHASES : settings.phases;
+        const phased = applyPhases(partFrames, picked);
+        const phaseMissing = !isAllPhases(picked) && phased.length === 0;
+        const frames = phaseMissing ? partFrames : phased;
+        const phasePartial = !isAllPhases(picked) && !phaseMissing;
         const params = buildRenderParams({ ...settings, bodyParts }, result.W, result.H);
         canvas.width = params.CANVAS_W;
         canvas.height = params.CANVAS_H;
@@ -118,8 +126,16 @@ export function useGenerator({ canvasRef, poseEnabled, onPoseUnavailable, onSour
         setArt({ frames, params, mode: settings.mode });
         setStats(computeStats(frames, settings.mode, peakEnergy ?? maxE, result.poseHits));
         setProgress(IDLE_PROGRESS);
-        const ignored = noPose && settings.bodyParts.length < ALL_BODY_PARTS.length;
-        setStatus(ignored ? 'DONE ✶ NO BODY FOUND — USED FULL MOTION' : partial ? 'DONE ✶ BODY PARTS' : 'DONE ✶');
+        const ignored = noPose && (settings.bodyParts.length < ALL_BODY_PARTS.length || !isAllPhases(settings.phases));
+        setStatus(
+          ignored
+            ? 'DONE ✶ NO BODY FOUND — USED FULL MOTION'
+            : phaseMissing
+              ? 'DONE ✶ PHASE NOT DETECTED — USED WHOLE CLIP'
+              : partial || phasePartial
+                ? `DONE ✶ ${[partial && 'BODY PARTS', phasePartial && 'PHASES'].filter(Boolean).join(' + ')}`
+                : 'DONE ✶',
+        );
       } catch (e) {
         console.error(e);
         const msg = e instanceof Error ? e.message : String(e);

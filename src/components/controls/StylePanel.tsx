@@ -1,6 +1,7 @@
-import type { ArtMode, ArtStats, BodyPart } from '../../types';
+import type { ArtMode, ArtStats, BodyPart, TrickPhase } from '../../types';
 import { Toggle } from '../ui/Toggle';
 import { BodyPartPicker } from './BodyPartPicker';
+import { PhasePicker } from './PhasePicker';
 import { ModeGrid } from './ModeGrid';
 import { PaletteRow } from './PaletteRow';
 import { StatsRow } from './StatsRow';
@@ -12,6 +13,8 @@ interface Props {
   onPaletteChange: (i: number) => void;
   bodyParts: readonly BodyPart[];
   onBodyPartsChange: (parts: BodyPart[]) => void;
+  phases: readonly TrickPhase[];
+  onPhasesChange: (phases: TrickPhase[]) => void;
   poseEnabled: boolean;
   onPoseToggle: () => void;
   canGenerate: boolean;
@@ -34,6 +37,9 @@ export function StylePanel(props: Props) {
 
       <span className="sec-lbl">Track{props.poseEnabled ? '' : ' (needs pose tracking)'}</span>
       <BodyPartPicker value={props.bodyParts} onChange={props.onBodyPartsChange} disabled={!props.poseEnabled} />
+
+      <span className="sec-lbl">Trick Phase{props.poseEnabled ? '' : ' (needs pose tracking)'}</span>
+      <PhasePicker value={props.phases} onChange={props.onPhasesChange} disabled={!props.poseEnabled} />
 
       <span className="sec-lbl">Color Palette</span>
       <PaletteRow value={props.paletteIdx} onChange={props.onPaletteChange} />

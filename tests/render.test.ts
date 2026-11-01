@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_BODY_PARTS } from '../src/constants/bodyParts';
+import { ALL_PHASES } from '../src/constants/phases';
 import { PALETTES } from '../src/constants/palettes';
 import { hexToRgb } from '../src/lib/color';
 import { symPoint } from '../src/engine/render/geometry';
@@ -16,6 +17,7 @@ const settings: ArtSettings = {
   symmetry: 1,
   persistence: 0.85,
   bodyParts: ALL_BODY_PARTS,
+  phases: ALL_PHASES,
 };
 
 const frame = (energy: number, extra: Partial<FrameData> = {}): FrameData => ({

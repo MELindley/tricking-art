@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ArtMode, ArtStats, BodyPart, TuneSettings } from '../../types';
+import type { ArtMode, ArtStats, BodyPart, TrickPhase, TuneSettings } from '../../types';
 import { Tabs } from '../ui/Tabs';
 import { StylePanel } from './StylePanel';
 import { TunePanel } from './TunePanel';
@@ -11,6 +11,8 @@ interface Props {
   onPaletteChange: (i: number) => void;
   bodyParts: readonly BodyPart[];
   onBodyPartsChange: (parts: BodyPart[]) => void;
+  phases: readonly TrickPhase[];
+  onPhasesChange: (phases: TrickPhase[]) => void;
   tune: TuneSettings;
   onTuneChange: (t: TuneSettings) => void;
   poseEnabled: boolean;

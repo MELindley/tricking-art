@@ -106,3 +106,32 @@ test('body-part picker: choose parts, re-render from the cached analysis, and di
   await expect(leftFoot).toBeDisabled();
   expect(problems).toEqual([]);
 });
+
+test('phase picker: choose trick phases, with at least one kept, and disable without pose', async ({ page }) => {
+  const problems = guard(page);
+  await generate(page, makeClip('phases.webm', ['-c:v', 'libvpx', '-b:v', '1M']));
+
+  await page.getByText('STYLE & GENERATE').click();
+  const whole = page.getByRole('button', { name: 'Whole trick' });
+  const launch = page.getByRole('button', { name: 'Launch', exact: true });
+  const peak = page.getByRole('button', { name: 'Peak', exact: true });
+
+  await expect(whole).toHaveAttribute('aria-pressed', 'true');
+  await launch.click();
+  await peak.click();
+  await expect(launch).toHaveAttribute('aria-pressed', 'true');
+  await expect(peak).toHaveAttribute('aria-pressed', 'true');
+  await expect(whole).toHaveAttribute('aria-pressed', 'false');
+  await launch.click();
+  await peak.click(); // the last selected phase can't be switched off
+  await expect(peak).toHaveAttribute('aria-pressed', 'true');
+
+  // The test clip has nobody in it, so the app must say it fell back to the full motion.
+  await page.getByRole('button', { name: 'GENERATE ART' }).first().click();
+  await expect(page.getByText(/NO BODY FOUND/)).toBeVisible();
+
+  await page.getByText('STYLE & GENERATE').click();
+  await page.getByRole('switch', { name: 'Pose Tracking' }).click();
+  await expect(peak).toBeDisabled();
+  expect(problems).toEqual([]);
+});

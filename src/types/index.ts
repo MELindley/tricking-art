@@ -67,6 +67,9 @@ export type ArtMode = 'trail' | 'mandala' | 'ghost' | 'flow';
 /** A region of the body the art can be restricted to. Left/right are the athlete's own. */
 export type BodyPart = 'head' | 'torso' | 'leftArm' | 'rightArm' | 'leftFoot' | 'rightFoot';
 
+/** A stage of the trick the art can be restricted to. */
+export type TrickPhase = 'load' | 'launch' | 'peak' | 'land';
+
 export interface Palette {
   name: string;
   colors: string[];
@@ -85,6 +88,8 @@ export interface ArtSettings extends TuneSettings {
   palette: string[];
   /** Which body parts drive the art (all of them = the whole body). Needs pose tracking. */
   bodyParts: readonly BodyPart[];
+  /** Which trick phases are drawn (all of them = the whole clip). Needs pose tracking. */
+  phases: readonly TrickPhase[];
 }
 
 export interface RenderParams {
